@@ -46,7 +46,25 @@ func marshalAndWrite(v any, name string, perm os.FileMode) error {
 
 func fetch(config Config) {
 	client := github.NewClient(config.GitHubToken)
-	since := time.Now().AddDate(0, 0, -1) // Last 1 days
+
+	// account for the weekend when fetching two days back
+	now := time.Now()
+	workdaysFound := 0
+	daysBack := 0
+
+	for workdaysFound < 3 {
+		daysBack++
+		checkDate := now.AddDate(0, 0, -daysBack)
+		weekday := checkDate.Weekday()
+
+		// Skip Saturday (6) and Sunday (0)
+		if weekday != time.Saturday && weekday != time.Sunday {
+			workdaysFound++
+		}
+	}
+
+	since := now.AddDate(0, 0, -daysBack)
+	log.Println("fetching since", since)
 
 	// retrieve data
 	for _, repo := range config.Repositories {
