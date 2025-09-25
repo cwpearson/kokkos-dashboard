@@ -48,6 +48,12 @@ func fetch(config Config) {
 			log.Printf("get issues error: %v", err)
 			continue
 		}
+
+		// skip repo with no activity
+		if len(issues) == 0 {
+			continue
+		}
+
 		marshalAndWrite(issues, filepath.Join(repoOutputDir, "issues.json"), 0755)
 
 		issuesOutputDir := filepath.Join(repoOutputDir, "issues")
