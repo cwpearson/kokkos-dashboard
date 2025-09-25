@@ -1,10 +1,10 @@
 {{define "header"}}
 <header>
-    Updated: <span class="timestamp">{{ .BuildDate }}</span>
     <nav>
         {{ range .NavRepos }}
         <a href="{{.URL}}">{{.Name}}</a>
         {{ end }}
     </nav>
+    <div>Last Update: <span class="timestamp">{{ .BuildDate }}</span></div>
 </header>
 {{end}}
