@@ -237,8 +237,13 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 		log.Fatal("Error executing template:", err)
 	}
 
-	os.RemoveAll(filepath.Join(config.OutputDir, "static"))
-	if err := os.CopyFS(filepath.Join(config.OutputDir, "static"), os.DirFS("static")); err != nil {
+	outputStaticDir := filepath.Join(config.OutputDir, "static")
+
+	log.Println("remove", outputStaticDir)
+	os.RemoveAll(outputStaticDir)
+
+	log.Println("static ->", outputStaticDir)
+	if err := os.CopyFS(outputStaticDir, os.DirFS("static")); err != nil {
 		log.Fatal(err)
 	}
 
