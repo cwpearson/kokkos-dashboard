@@ -98,7 +98,7 @@ func NewClient(token string) *Client {
 		token: token,
 		rlClient: ratelimit.NewRateLimitedClientWithHTTPClient(
 			&http.Client{Timeout: 30 * time.Second},
-			1*time.Second,
+			time.Hour/5000, // 5k requests per hour
 		),
 		baseURL: "https://api.github.com",
 	}
@@ -132,7 +132,7 @@ func (c *Client) GetRecentIssues(owner, repo string, since time.Time) ([]Issue, 
 	// Filter out pull requests (GitHub API returns PRs as issues too)
 	var filteredIssues []Issue
 	for _, issue := range issues {
-		if issue.PullRequest != nil {
+		if issue.PullRequest == nil {
 			filteredIssues = append(filteredIssues, issue)
 		} else {
 			log.Println("issue", issue.Number, "was actually a PR")
