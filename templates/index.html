@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../static/index.css" rel="stylesheet" />
+    <title>Kokkos Ecosystem</title>
+</head>
+<body>
+    {{template "header" .}}
+    {{ range .Repos }}
+    <div class="repo">
+        <h2>{{.Owner}}/{{.Repo}}</h2>
+
+        <h3>Issues</h3>
+        <div class="issue-list">
+            {{ range .Issues }}
+            <div class="issue">
+                <h4><a href="{{ .HTMLURL }}">Issue {{ .Number }}</a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt }}</span> - {{ .State }}</h4>
+
+                <h5>Comments</h5>
+                <div class="comment-list">
+                    {{ range .Comments }}
+                    <div class="comment">
+                        {{ .User.Login }} <span class="timestamp">{{ .UpdatedAt }}</span>
+                        <div class="body">
+                            {{.Body | safe}}
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+
+                <details>
+                    <summary>Events</summary>
+                    <div class="event-list">
+                        {{ range .Events }}
+                        <div class="event">
+                            <span class="timestamp">{{ .CreatedAt }}</span> - {{ .Event }}
+                        </div>
+                        {{ end }}
+                    </div>
+                </detail>
+
+            </div>
+            {{ end }}
+        </div>
+
+        <h3>PRs</h3>
+        <div class="pr-list">
+            {{ range .PRs }}
+            <div class="pr">
+                <h4><a href="{{ .HTMLURL }}">PR {{ .Number }}</a> - {{ .Title }}</h4>
+                {{ .State }}
+                <span class="timestamp">{{ .UpdatedAt }}</span>
+                
+                <h5>Comments</h5>
+                <div class="comment-list">
+                    {{ range .Comments }}
+                    <div class="comment">
+                        {{ .User.Login }} <span class="timestamp">{{ .UpdatedAt }}</span>
+                        <div class="body">
+                            {{.Body | safe}}
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+
+                <details>
+                    <summary>Events</summary>
+                    <div class="event-list">
+                        {{ range .Events }}
+                        <div class="event">
+                            {{ .CreatedAt }} - {{ .Event }}
+                        </div>
+                        {{ end }}
+                    </div>
+                </detail>
+
+            </div>
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
+    {{template "footer" .}}
+
+    <script type="text/javascript" src="../static/local.js"></script>
+</body>
+</html>
