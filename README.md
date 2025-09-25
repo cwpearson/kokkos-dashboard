@@ -12,3 +12,12 @@ export KOKKOS_DASHBOARD_TOKEN=...
 go mod tidy
 go run *.go
 ```
+
+
+## Roadmap
+
+- [ ] Combine PRs and Issues, sort by most recent
+- [ ] Bit of JS to delete cards
+- [ ] more github.com links
+- [ ] Hide comments section if there are no comments
+- [ ] `owner-repo.html` -> `owner/repo/index.html`
