@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"time"
 
 	"kokkos-dashboard/github"
 )
@@ -33,24 +32,7 @@ func marshalAndWrite(v any, name string, perm os.FileMode) error {
 func fetch(config Config) {
 	client := github.NewClient(config.GitHubToken)
 
-	// account for the weekend when fetching two days back
-	now := time.Now()
-	workdaysFound := 0
-	daysBack := 0
-
-	for workdaysFound < 2 {
-		daysBack++
-		checkDate := now.AddDate(0, 0, -daysBack)
-		weekday := checkDate.Weekday()
-
-		// Skip Saturday (6) and Sunday (0)
-		if weekday != time.Saturday && weekday != time.Sunday {
-			workdaysFound++
-		}
-	}
-
-	since := now.AddDate(0, 0, -daysBack)
-	log.Println("fetching since", since)
+	log.Println("fetching since", config.Since)
 
 	log.Println("remove", config.FetchDir)
 	os.RemoveAll(config.FetchDir)
@@ -61,7 +43,7 @@ func fetch(config Config) {
 		repoOutputDir := filepath.Join(config.FetchDir, repo.Owner, repo.Name)
 
 		log.Printf("Fetching issues for %s/%s...", repo.Owner, repo.Name)
-		issues, err := client.GetRecentIssues(repo.Owner, repo.Name, since)
+		issues, err := client.GetRecentIssues(repo.Owner, repo.Name, config.Since)
 		if err != nil {
 			log.Printf("get issues error: %v", err)
 			continue
@@ -73,7 +55,7 @@ func fetch(config Config) {
 
 			issueOutputDir := filepath.Join(issuesOutputDir, fmt.Sprintf("%d", issue.Number))
 
-			comments, err := client.GetIssueComments(repo.Owner, repo.Name, issue.Number, since)
+			comments, err := client.GetIssueComments(repo.Owner, repo.Name, issue.Number, config.Since)
 			if err != nil {
 				log.Printf("Error fetching PRs: %v", err)
 				continue

@@ -6,13 +6,15 @@
     <link href="{{$.SiteRoot}}static/header.css" rel="stylesheet" />
     <link href="{{$.SiteRoot}}static/footer.css" rel="stylesheet" />
     <link href="{{$.SiteRoot}}static/index.css" rel="stylesheet" />
-    <title>Kokkos Ecosystem Dashboard</title>
+    <title>Dashboard for Kokkos</title>
 </head>
 <body>
     {{template "header" .}}
+    <div class="repos-list">
     {{ range .Repos }}
     {{ template "repo" .}}
     {{ end }}
+    </div>
     {{template "footer" .}}
 
     <script type="text/javascript" src="{{$.SiteRoot}}static/local.js"></script>

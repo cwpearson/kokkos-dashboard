@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type Config struct {
@@ -17,6 +18,7 @@ type Config struct {
 	FetchDir  string
 	OutputDir string
 	SiteRoot  string
+	Since     time.Time
 }
 
 func main() {
@@ -26,6 +28,22 @@ func main() {
 	serveFlag := flag.Bool("serve", false, "Serve render output dir")
 	siteRootFlag := flag.String("site-root", "/", "Site root for render")
 	flag.Parse()
+
+	// account for the weekend when fetching two days back
+	now := time.Now()
+	workdaysFound := 0
+	daysBack := 0
+
+	for workdaysFound < 2 {
+		daysBack++
+		checkDate := now.AddDate(0, 0, -daysBack)
+		weekday := checkDate.Weekday()
+
+		// Skip Saturday (6) and Sunday (0)
+		if weekday != time.Saturday && weekday != time.Sunday {
+			workdaysFound++
+		}
+	}
 
 	// Load configuration
 	config := Config{
@@ -43,6 +61,7 @@ func main() {
 		FetchDir:  "data/",
 		OutputDir: "public/",
 		SiteRoot:  *siteRootFlag,
+		Since:     now.AddDate(0, 0, -daysBack),
 	}
 
 	// fetch

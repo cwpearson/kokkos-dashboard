@@ -1,9 +1,10 @@
-# [kokkos-dashboard](https://cwpearson.github.io/kokkos-dashboard/)
+# [Dashboard for Kokkos](https://cwpearson.github.io/kokkos-dashboard/)
 
 > [!WARNING]  
 > Not an official Kokkos Ecosystem project.
 
 Dashboard of Kokkos ecosystem activity.
+Shows activity for the last two workdays for several repositories.
 
 
 ```

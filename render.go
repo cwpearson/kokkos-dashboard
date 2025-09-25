@@ -177,6 +177,7 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 		"BuildDate":   time.Now().Format(time.RFC3339),
 		"NavRepos":    navRepos,
 		"SiteRoot":    config.SiteRoot,
+		"Since":       config.Since.Format(time.RFC3339),
 	})
 	if err != nil {
 		log.Fatal("Error executing template:", err)
@@ -198,6 +199,7 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 			"BuildDate":   time.Now().Format(time.RFC3339),
 			"NavRepos":    navRepos,
 			"SiteRoot":    config.SiteRoot,
+			"Since":       config.Since.Format(time.RFC3339),
 		})
 		if err != nil {
 			log.Fatal("Error executing template:", err)
