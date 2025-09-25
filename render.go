@@ -234,7 +234,7 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 	navRepos := []NavRepo{{"index.html", "all"}}
 
 	for _, repo := range repoData {
-		navRepos = append(navRepos, NavRepo{fmt.Sprintf("%s-%s.html", repo.Owner, repo.Repo), repo.Repo})
+		navRepos = append(navRepos, NavRepo{fmt.Sprintf("%s/%s", repo.Owner, repo.Repo), repo.Repo})
 	}
 
 	// Execute the template with data
@@ -249,7 +249,10 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 	}
 
 	for _, repo := range repoData {
-		outputFile, err := os.Create(filepath.Join(config.OutputDir, fmt.Sprintf("%s-%s.html", repo.Owner, repo.Repo)))
+
+		outputPath := filepath.Join(config.OutputDir, repo.Owner, repo.Repo, "index.html")
+		os.MkdirAll(filepath.Dir(outputPath), 0755)
+		outputFile, err := os.Create(outputPath)
 		if err != nil {
 			log.Fatal("Error creating output file:", err)
 		}

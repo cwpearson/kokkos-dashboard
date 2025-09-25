@@ -20,4 +20,4 @@ go run *.go
 - [ ] Bit of JS to delete cards
 - [ ] more github.com links
 - [ ] Hide comments section if there are no comments
-- [ ] `owner-repo.html` -> `owner/repo/index.html`
+- [x] `owner-repo.html` -> `owner/repo/index.html`
