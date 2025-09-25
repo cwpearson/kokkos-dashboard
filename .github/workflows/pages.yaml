@@ -44,6 +44,9 @@ jobs:
         env: 
           KOKKOS_DASHBOARD_TOKEN: ${{ secrets.KOKKOS_DASHBOARD_TOKEN }}
 
+      - name: See site
+        run: tree public
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
