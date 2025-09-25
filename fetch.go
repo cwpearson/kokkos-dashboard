@@ -52,6 +52,9 @@ func fetch(config Config) {
 	since := now.AddDate(0, 0, -daysBack)
 	log.Println("fetching since", since)
 
+	log.Println("remove", config.FetchDir)
+	os.RemoveAll(config.FetchDir)
+
 	// retrieve data
 	for _, repo := range config.Repositories {
 
