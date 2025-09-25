@@ -124,19 +124,22 @@ func main() {
 			Name  string
 		}{
 			{Owner: "kokkos", Name: "kokkos"},
-			// {Owner: "kokkos", Name: "kokkos-kernels"},
-			// Add your repositories here
+			{Owner: "kokkos", Name: "kokkos-kernels"},
+			{Owner: "kokkos", Name: "kokkos-comm"},
+			{Owner: "kokkos", Name: "kokkos-fft"},
+			{Owner: "kokkos", Name: "kokkos-core-wiki"},
 		},
 		FetchDir:  "data/",
 		OutputDir: "public/",
 	}
 
-	// Execute operations based on flags
+	// fetch
 	if *fetchFlag {
 		fmt.Println("Fetching GitHub activity...")
 		fetch(config)
 	}
 
+	// render
 	if *renderFlag {
 		fmt.Println("Rendering static site...")
 		render(config)
