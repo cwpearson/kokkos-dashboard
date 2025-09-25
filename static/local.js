@@ -1,5 +1,5 @@
-function formatRelativeTime(dateString) {
-    const date = new Date(dateString);
+function formatRelativeTime(rfc3339String) {
+    const date = new Date(rfc3339String);
     const now = new Date();
     const diffMs = now - date;
     const diffSecs = Math.floor(diffMs / 1000);
@@ -9,7 +9,18 @@ function formatRelativeTime(dateString) {
 
     // Handle future dates
     if (diffMs < 0) {
-        return formatFutureTime(date, now);
+        const futureDiffMs = Math.abs(diffMs);
+        const futureDiffMins = Math.floor(futureDiffMs / 60000);
+        const futureDiffHours = Math.floor(futureDiffMins / 60);
+        const futureDiffDays = Math.floor(futureDiffHours / 24);
+
+        if (futureDiffMins < 60) {
+            return `in ${futureDiffMins} minute${futureDiffMins !== 1 ? 's' : ''}`;
+        } else if (futureDiffHours < 24) {
+            return `in ${futureDiffHours} hour${futureDiffHours !== 1 ? 's' : ''}`;
+        } else {
+            return `in ${futureDiffDays} day${futureDiffDays !== 1 ? 's' : ''}`;
+        }
     }
 
     // Past dates
@@ -19,12 +30,8 @@ function formatRelativeTime(dateString) {
         return diffMins === 1 ? '1 minute ago' : `${diffMins} minutes ago`;
     } else if (diffHours < 24) {
         return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
-    } else if (diffDays === 0) {
-        return `today at ${formatTime(date)}`;
-    } else if (diffDays === 1) {
-        return `yesterday at ${formatTime(date)}`;
     } else if (diffDays < 7) {
-        return `${diffDays} days ago`;
+        return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
     } else if (diffDays < 30) {
         const weeks = Math.floor(diffDays / 7);
         return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
@@ -37,76 +44,32 @@ function formatRelativeTime(dateString) {
     }
 }
 
-function formatFutureTime(date, now) {
-    const diffMs = date - now;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMins < 60) {
-        return `in ${diffMins} minute${diffMins !== 1 ? 's' : ''}`;
-    } else if (diffHours < 24) {
-        return `in ${diffHours} hour${diffHours !== 1 ? 's' : ''}`;
-    } else if (diffDays < 7) {
-        return `in ${diffDays} day${diffDays !== 1 ? 's' : ''}`;
-    } else {
-        return `on ${date.toLocaleDateString()}`;
-    }
-}
-
-function formatTime(date) {
-    return date.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: true 
-    });
-}
-
-// Function to replace all timestamp elements on the page
+// Replace timestamps on the page
 function replaceTimestamps() {
-    // Select elements containing timestamps (adjust selector as needed)
-    const timestampElements = document.querySelectorAll('[data-timestamp], time, .timestamp');
+    const timestampElements = document.querySelectorAll('[datetime], time');
 
     timestampElements.forEach(element => {
-        // Try to get timestamp from various sources
-        let dateString = element.getAttribute('datetime') || 
-                        element.getAttribute('data-timestamp') || 
-                        element.textContent.trim();
+        const rfc3339String = element.getAttribute('datetime') || element.textContent.trim();
 
-        // Check if it looks like a timestamp
-        if (isValidTimestamp(dateString)) {
-            const relativeTime = formatRelativeTime(dateString);
+        // RFC3339 validation pattern
+        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|[+-]\d{2}:\d{2})$/.test(rfc3339String)) {
+            const relativeTime = formatRelativeTime(rfc3339String);
 
-            // Store original timestamp as title for hover
-            element.title = new Date(dateString).toLocaleString();
-
-            // Replace content with relative time
+            // Store original timestamp as title
+            element.title = new Date(rfc3339String).toLocaleString();
             element.textContent = relativeTime;
-
-            // Add a class for styling if needed
             element.classList.add('relative-time');
         }
     });
 }
 
-function isValidTimestamp(str) {
-    // Basic check for timestamp patterns
-    const patterns = [
-        /^\d{4}-\d{2}-\d{2}/, // ISO date format
-        /^\d{1,2}\/\d{1,2}\/\d{4}/, // US date format
-        /^\d{10,13}$/ // Unix timestamp
-    ];
-
-    return patterns.some(pattern => pattern.test(str)) && !isNaN(Date.parse(str));
-}
-
-// Auto-update timestamps every minute
+// Auto-update every minute
 function startAutoUpdate() {
     replaceTimestamps();
-    setInterval(replaceTimestamps, 60000); // Update every minute
+    setInterval(replaceTimestamps, 60000);
 }
 
-// Initialize when DOM is ready
+// Initialize
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', startAutoUpdate);
 } else {
