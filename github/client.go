@@ -3,6 +3,7 @@ package github
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -25,6 +26,7 @@ type Issue struct {
 	User      struct {
 		Login string `json:"login"`
 	} `json:"user"`
+	PullRequest *struct{} `json:"pull_request,omitempty"` // to filter out PRs
 }
 
 type PullRequest struct {
@@ -130,8 +132,10 @@ func (c *Client) GetRecentIssues(owner, repo string, since time.Time) ([]Issue, 
 	// Filter out pull requests (GitHub API returns PRs as issues too)
 	var filteredIssues []Issue
 	for _, issue := range issues {
-		if issue.UpdatedAt.After(since) {
+		if issue.PullRequest != nil {
 			filteredIssues = append(filteredIssues, issue)
+		} else {
+			log.Println("issue", issue.Number, "was actually a PR")
 		}
 	}
 
@@ -139,8 +143,8 @@ func (c *Client) GetRecentIssues(owner, repo string, since time.Time) ([]Issue, 
 }
 
 func (c *Client) GetRecentPullRequests(owner, repo string, since time.Time) ([]PullRequest, error) {
-	url := fmt.Sprintf("%s/repos/%s/%s/pulls?state=all&sort=updated&direction=desc&per_page=100",
-		c.baseURL, owner, repo)
+	url := fmt.Sprintf("%s/repos/%s/%s/pulls?state=all&sort=updated&direction=desc&since=%s&per_page=100",
+		c.baseURL, owner, repo, since.Format(time.RFC3339))
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
