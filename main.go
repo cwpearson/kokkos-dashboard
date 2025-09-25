@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 )
@@ -59,6 +60,7 @@ func main() {
 	if *serveFlag {
 		fs := http.FileServer(http.Dir(config.OutputDir))
 		http.Handle("/", fs)
+		log.Println("serve on :8080")
 		http.ListenAndServe(":8080", nil)
 	}
 }

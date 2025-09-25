@@ -15,6 +15,7 @@
                     {{ .Number }}
                 </a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt }}</span> - {{ .State }}</h4>
 
+                {{ if .Comments}}
                 <h5>Comments</h5>
                 <div class="comment-list">
                     {{ range .Comments }}
@@ -26,6 +27,7 @@
                     </div>
                     {{ end }}
                 </div>
+                {{ end }}
 
                 <details>
                     <summary>Events</summary>
