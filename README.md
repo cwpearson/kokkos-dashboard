@@ -17,7 +17,7 @@ go run *.go --fetch --render --serve
 ## Roadmap
 
 - [x] Combine PRs and Issues, sort by most recent
-- [ ] Bit of JS to delete cards
+- [x] Bit of JS to delete cards
 - [ ] more github.com links
 - [x] Hide comments section if there are no comments
 - [x] `owner-repo.html` -> `owner/repo/index.html`

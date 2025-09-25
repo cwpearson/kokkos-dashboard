@@ -2,10 +2,10 @@
 <div class="repo">
         <h2>{{.Owner}}/{{.Repo}}</h2>
 
-        <h3>Issues</h3>
         <div class="issue-list">
             {{ range .Issues }}
             <div class="issue">
+                <button class="hide-btn" onclick="hideIssue(this)">Hide (refresh page to show again)</button>
                 <h4><a href="{{ .HTMLURL }}">
                     {{ if .PullRequest }}
                     PR
