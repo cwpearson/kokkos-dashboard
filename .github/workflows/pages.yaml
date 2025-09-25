@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["master"]
+    ignore-paths:
+      - README.md
   schedule:
     - cron: '0 */3 * * *' # Runs every 3 hours
   workflow_dispatch:
