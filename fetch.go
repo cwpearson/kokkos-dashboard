@@ -38,7 +38,7 @@ func fetch(config Config) {
 	workdaysFound := 0
 	daysBack := 0
 
-	for workdaysFound < 3 {
+	for workdaysFound < 2 {
 		daysBack++
 		checkDate := now.AddDate(0, 0, -daysBack)
 		weekday := checkDate.Weekday()
