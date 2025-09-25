@@ -20,7 +20,7 @@
                 <div class="comment-list">
                     {{ range .Comments }}
                     <div class="comment">
-                        {{ .User.Login }} <span class="timestamp">{{ .UpdatedAt }}</span>
+                        <a href={{.HTMLURL | safe}}>{{ .User.Login }} <span class="timestamp">{{ .UpdatedAt }}</span></a>
                         <div class="body">
                             {{.Body | safe}}
                         </div>
