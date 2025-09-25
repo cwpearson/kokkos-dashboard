@@ -29,7 +29,7 @@ func marshalAndWrite(v any, name string, perm os.FileMode) error {
 	return nil
 }
 
-func fetch(config Config) {
+func fetch(config Config) error {
 	client := github.NewClient(config.GitHubToken)
 
 	log.Println("fetching since", config.Since)
@@ -45,8 +45,7 @@ func fetch(config Config) {
 		log.Printf("Fetching issues for %s/%s...", repo.Owner, repo.Name)
 		issues, err := client.GetRecentIssues(repo.Owner, repo.Name, config.Since)
 		if err != nil {
-			log.Printf("get issues error: %v", err)
-			continue
+			return err
 		}
 
 		// skip repo with no activity
@@ -54,7 +53,9 @@ func fetch(config Config) {
 			continue
 		}
 
-		marshalAndWrite(issues, filepath.Join(repoOutputDir, "issues.json"), 0755)
+		if err := marshalAndWrite(issues, filepath.Join(repoOutputDir, "issues.json"), 0755); err != nil {
+			return err
+		}
 
 		issuesOutputDir := filepath.Join(repoOutputDir, "issues")
 		for _, issue := range issues {
@@ -63,17 +64,20 @@ func fetch(config Config) {
 
 			comments, err := client.GetIssueComments(repo.Owner, repo.Name, issue.Number, config.Since)
 			if err != nil {
-				log.Printf("Error fetching PRs: %v", err)
-				continue
+				return err
 			}
-			marshalAndWrite(comments, filepath.Join(issueOutputDir, "comments.json"), 0755)
+			if err := marshalAndWrite(comments, filepath.Join(issueOutputDir, "comments.json"), 0755); err != nil {
+				return err
+			}
 
 			events, err := client.GetIssueEvents(repo.Owner, repo.Name, issue.Number)
 			if err != nil {
-				log.Printf("event fetch error: %v", err)
-				continue
+				return err
 			}
-			marshalAndWrite(events, filepath.Join(issueOutputDir, "events.json"), 0755)
+			if err := marshalAndWrite(events, filepath.Join(issueOutputDir, "events.json"), 0755); err != nil {
+				return err
+			}
 		}
 	}
+	return nil
 }

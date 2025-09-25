@@ -74,13 +74,17 @@ func main() {
 	// fetch
 	if *fetchFlag {
 		fmt.Println("Fetching GitHub activity...")
-		fetch(config)
+		if err := fetch(config); err != nil {
+			log.Fatalf("fetch error: %v", err)
+		}
 	}
 
 	// render
 	if *renderFlag {
 		fmt.Println("Rendering static site...")
-		render(config)
+		if err := render(config); err != nil {
+			log.Fatalf("render error: %v", err)
+		}
 	}
 
 	if *serveFlag {
