@@ -1,6 +1,6 @@
-# kokkos-dashboard
+# [kokkos-dashboard](https://cwpearson.github.io/kokkos-dashboard/)
 
 > [!WARNING]  
 > Not an official Kokkos Ecosystem project.
 
-Dashbaord to keep track of Kokkos ecosystem activity.
+Dashboard of Kokkos ecosystem activity.
