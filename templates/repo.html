@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="static/index.css" rel="stylesheet" />
-    <title>Kokkos Ecosystem Dashboard</title>
+    <title>{{ .Owner }}/{{.Repo}} Dashboard</title>
 </head>
 <body>
     {{template "header" .}}
-    {{ range .Repos }}
-    {{ template "repo" .}}
-    {{ end }}
+    {{ template "repo" .Repo }}
     {{template "footer" .}}
-
     <script type="text/javascript" src="static/local.js"></script>
 </body>
 </html>

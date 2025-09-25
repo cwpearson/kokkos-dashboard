@@ -227,14 +227,44 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 	}
 	defer outputFile.Close()
 
+	type NavRepo struct {
+		URL  string
+		Name string
+	}
+	navRepos := []NavRepo{{"index.html", "all"}}
+
+	for _, repo := range repoData {
+		navRepos = append(navRepos, NavRepo{fmt.Sprintf("%s-%s.html", repo.Owner, repo.Repo), repo.Repo})
+	}
+
 	// Execute the template with data
 	err = tmpl.ExecuteTemplate(outputFile, "index.html", map[string]any{
 		"Repos":       repoData,
 		"CurrentYear": time.Now().Year(),
 		"BuildDate":   time.Now().Format(time.RFC3339),
+		"NavRepos":    navRepos,
 	})
 	if err != nil {
 		log.Fatal("Error executing template:", err)
+	}
+
+	for _, repo := range repoData {
+		outputFile, err := os.Create(filepath.Join(config.OutputDir, fmt.Sprintf("%s-%s.html", repo.Owner, repo.Repo)))
+		if err != nil {
+			log.Fatal("Error creating output file:", err)
+		}
+		defer outputFile.Close()
+
+		err = tmpl.ExecuteTemplate(outputFile, "repo.html", map[string]any{
+			"Repo":        repo,
+			"CurrentYear": time.Now().Year(),
+			"BuildDate":   time.Now().Format(time.RFC3339),
+			"NavRepos":    navRepos,
+		})
+		if err != nil {
+			log.Fatal("Error executing template:", err)
+		}
+
 	}
 
 	outputStaticDir := filepath.Join(config.OutputDir, "static")
