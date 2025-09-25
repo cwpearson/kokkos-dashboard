@@ -2,7 +2,7 @@
 <header>
     <nav>
         {{ range .NavRepos }}
-        <a href="{{.URL}}">{{.Name}}</a>
+        <a href="{{$.SiteRoot}}{{.URL}}">{{.Name}}</a>
         {{ end }}
     </nav>
     <div>Last Update: <span class="timestamp">{{ .BuildDate }}</span></div>

@@ -68,14 +68,6 @@ func fetch(config Config) {
 		}
 		marshalAndWrite(issues, filepath.Join(repoOutputDir, "issues.json"), 0755)
 
-		log.Printf("Fetching PRs for %s/%s...", repo.Owner, repo.Name)
-		prs, err := client.GetRecentPullRequests(repo.Owner, repo.Name, since)
-		if err != nil {
-			log.Printf("Error fetching PRs: %v", err)
-			continue
-		}
-		marshalAndWrite(prs, filepath.Join(repoOutputDir, "prs.json"), 0755)
-
 		issuesOutputDir := filepath.Join(repoOutputDir, "issues")
 		for _, issue := range issues {
 
@@ -95,24 +87,5 @@ func fetch(config Config) {
 			}
 			marshalAndWrite(events, filepath.Join(issueOutputDir, "events.json"), 0755)
 		}
-
-		prsOutputDir := filepath.Join(repoOutputDir, "prs")
-		for _, pr := range prs {
-			prOutputDir := filepath.Join(prsOutputDir, fmt.Sprintf("%d", pr.Number))
-			comments, err := client.GetIssueComments(repo.Owner, repo.Name, pr.Number, since)
-			if err != nil {
-				log.Printf("Error fetching PRs: %v", err)
-				continue
-			}
-			marshalAndWrite(comments, filepath.Join(prOutputDir, "comments.json"), 0755)
-
-			events, err := client.GetIssueEvents(repo.Owner, repo.Name, pr.Number)
-			if err != nil {
-				log.Printf("event fetch error: %v", err)
-				continue
-			}
-			marshalAndWrite(events, filepath.Join(prOutputDir, "events.json"), 0755)
-		}
-
 	}
 }

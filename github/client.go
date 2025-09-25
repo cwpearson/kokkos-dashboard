@@ -3,7 +3,6 @@ package github
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -129,17 +128,7 @@ func (c *Client) GetRecentIssues(owner, repo string, since time.Time) ([]Issue, 
 		return nil, err
 	}
 
-	// Filter out pull requests (GitHub API returns PRs as issues too)
-	var filteredIssues []Issue
-	for _, issue := range issues {
-		if issue.PullRequest == nil {
-			filteredIssues = append(filteredIssues, issue)
-		} else {
-			log.Println("issue", issue.Number, "was actually a PR")
-		}
-	}
-
-	return filteredIssues, nil
+	return issues, nil
 }
 
 func (c *Client) GetRecentPullRequests(owner, repo string, since time.Time) ([]PullRequest, error) {

@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/header.css" rel="stylesheet" />
-    <link href="static/footer.css" rel="stylesheet" />
-    <link href="static/index.css" rel="stylesheet" />
+    <link href="{{$.SiteRoot}}static/header.css" rel="stylesheet" />
+    <link href="{{$.SiteRoot}}static/footer.css" rel="stylesheet" />
+    <link href="{{$.SiteRoot}}static/index.css" rel="stylesheet" />
     <title>{{ .Owner }}/{{.Repo}} Dashboard</title>
 </head>
 <body>
     {{template "header" .}}
     {{ template "repo" .Repo }}
     {{template "footer" .}}
-    <script type="text/javascript" src="static/local.js"></script>
+    <script type="text/javascript" src="{{$.SiteRoot}}static/local.js"></script>
 </body>
 </html>

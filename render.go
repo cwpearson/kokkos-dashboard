@@ -21,18 +21,10 @@ type RepoData struct {
 	Owner  string
 	Repo   string
 	Issues []Issue
-	PRs    []PR
 }
 
 type Issue struct {
 	github.Issue
-
-	Comments []*github.IssueComment
-	Events   []github.IssueEvent
-}
-
-type PR struct {
-	github.PullRequest
 
 	Comments []*github.IssueComment
 	Events   []github.IssueEvent
@@ -63,18 +55,6 @@ func loadIssues(path string) ([]github.Issue, error) {
 		return nil, err
 	}
 	return issues, nil
-}
-
-func loadPullRequests(path string) ([]github.PullRequest, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	var prs []github.PullRequest
-	if err := json.Unmarshal(data, &prs); err != nil {
-		return nil, err
-	}
-	return prs, nil
 }
 
 func render(config Config) error {
@@ -114,19 +94,12 @@ func render(config Config) error {
 				Owner:  ownerName,
 				Repo:   repoName,
 				Issues: []Issue{},
-				PRs:    []PR{},
 			}
 
 			// Process issues.json
 			issues, err := loadIssues(filepath.Join(repoPath, "issues.json"))
 			if err != nil {
 				log.Printf("Warning: failed to load issues for %s: %v", ownerName, err)
-			}
-
-			// Process prs.json
-			prs, err := loadPullRequests(filepath.Join(repoPath, "prs.json"))
-			if err != nil {
-				log.Printf("Warning: failed to load PRs for %s: %v", ownerName, err)
 			}
 
 			// process issues subdirectory
@@ -158,51 +131,12 @@ func render(config Config) error {
 				data.Issues = append(data.Issues, issueData)
 			}
 
-			// process PRs subdirectory
-			prsDir := filepath.Join(repoPath, "prs")
-			for _, pr := range prs {
-				prDir := filepath.Join(prsDir, fmt.Sprintf("%d", pr.Number))
-
-				commentsPath := filepath.Join(prDir, "comments.json")
-				eventsPath := filepath.Join(prDir, "events.json")
-
-				prData := PR{
-					PullRequest: pr,
-					Comments:    []*github.IssueComment{},
-					Events:      []github.IssueEvent{},
-				}
-
-				if fData, err := os.ReadFile(commentsPath); err == nil {
-					json.Unmarshal(fData, &prData.Comments)
-				}
-				if fData, err := os.ReadFile(eventsPath); err == nil {
-					json.Unmarshal(fData, &prData.Events)
-				}
-
-				// render bodies to markdown
-				for _, comment := range prData.Comments {
-					comment.Body = string(mdToHTML([]byte(comment.Body)))
-				}
-
-				data.PRs = append(data.PRs, prData)
-			}
-
 			repoData[fmt.Sprintf("%s/%s", ownerName, repoName)] = data
 
 		}
 	}
 	// Render the organized data
 	return renderRepoData(repoData, config)
-}
-
-type IssueActivity struct {
-	Comments []github.IssueComment
-	Events   []github.IssueEvent
-}
-
-type PRActivity struct {
-	Comments []github.IssueComment
-	Events   []github.IssueEvent
 }
 
 func renderRepoData(repoData map[string]*RepoData, config Config) error {
@@ -231,8 +165,7 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 		URL  string
 		Name string
 	}
-	navRepos := []NavRepo{{"index.html", "all"}}
-
+	navRepos := []NavRepo{{"", "all"}}
 	for _, repo := range repoData {
 		navRepos = append(navRepos, NavRepo{fmt.Sprintf("%s/%s", repo.Owner, repo.Repo), repo.Repo})
 	}
@@ -243,6 +176,7 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 		"CurrentYear": time.Now().Year(),
 		"BuildDate":   time.Now().Format(time.RFC3339),
 		"NavRepos":    navRepos,
+		"SiteRoot":    config.SiteRoot,
 	})
 	if err != nil {
 		log.Fatal("Error executing template:", err)
@@ -263,6 +197,7 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 			"CurrentYear": time.Now().Year(),
 			"BuildDate":   time.Now().Format(time.RFC3339),
 			"NavRepos":    navRepos,
+			"SiteRoot":    config.SiteRoot,
 		})
 		if err != nil {
 			log.Fatal("Error executing template:", err)

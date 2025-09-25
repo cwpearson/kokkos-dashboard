@@ -6,7 +6,14 @@
         <div class="issue-list">
             {{ range .Issues }}
             <div class="issue">
-                <h4><a href="{{ .HTMLURL }}">Issue {{ .Number }}</a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt }}</span> - {{ .State }}</h4>
+                <h4><a href="{{ .HTMLURL }}">
+                    {{ if .PullRequest }}
+                    PR
+                    {{ else }}
+                    Issue 
+                    {{ end }}
+                    {{ .Number }}
+                </a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt }}</span> - {{ .State }}</h4>
 
                 <h5>Comments</h5>
                 <div class="comment-list">
@@ -26,41 +33,6 @@
                         {{ range .Events }}
                         <div class="event">
                             <span class="timestamp">{{ .CreatedAt }}</span> - {{ .Event }}
-                        </div>
-                        {{ end }}
-                    </div>
-                </detail>
-
-            </div>
-            {{ end }}
-        </div>
-
-        <h3>PRs</h3>
-        <div class="pr-list">
-            {{ range .PRs }}
-            <div class="pr">
-                <h4><a href="{{ .HTMLURL }}">PR {{ .Number }}</a> - {{ .Title }}</h4>
-                {{ .State }}
-                <span class="timestamp">{{ .UpdatedAt }}</span>
-                
-                <h5>Comments</h5>
-                <div class="comment-list">
-                    {{ range .Comments }}
-                    <div class="comment">
-                        {{ .User.Login }} <span class="timestamp">{{ .UpdatedAt }}</span>
-                        <div class="body">
-                            {{.Body | safe}}
-                        </div>
-                    </div>
-                    {{ end }}
-                </div>
-
-                <details>
-                    <summary>Events</summary>
-                    <div class="event-list">
-                        {{ range .Events }}
-                        <div class="event">
-                            {{ .CreatedAt }} - {{ .Event }}
                         </div>
                         {{ end }}
                     </div>

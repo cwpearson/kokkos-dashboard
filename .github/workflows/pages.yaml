@@ -42,7 +42,7 @@ jobs:
         run: go mod tidy
 
       - name: Build site
-        run: go run *.go --fetch --render
+        run: go run *.go --fetch --render --site-root="/kokkos-dashboard/"
         env: 
           KOKKOS_DASHBOARD_TOKEN: ${{ secrets.KOKKOS_DASHBOARD_TOKEN }}
 

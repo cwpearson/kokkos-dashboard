@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -14,12 +15,15 @@ type Config struct {
 	}
 	FetchDir  string
 	OutputDir string
+	SiteRoot  string
 }
 
 func main() {
 	// Define command-line flags
 	fetchFlag := flag.Bool("fetch", false, "Fetch GitHub activity data")
 	renderFlag := flag.Bool("render", false, "Render static site from fetched data")
+	serveFlag := flag.Bool("serve", false, "Serve render output dir")
+	siteRootFlag := flag.String("site-root", "/", "Site root for render")
 	flag.Parse()
 
 	// Load configuration
@@ -37,6 +41,7 @@ func main() {
 		},
 		FetchDir:  "data/",
 		OutputDir: "public/",
+		SiteRoot:  *siteRootFlag,
 	}
 
 	// fetch
@@ -49,5 +54,11 @@ func main() {
 	if *renderFlag {
 		fmt.Println("Rendering static site...")
 		render(config)
+	}
+
+	if *serveFlag {
+		fs := http.FileServer(http.Dir(config.OutputDir))
+		http.Handle("/", fs)
+		http.ListenAndServe(":8080", nil)
 	}
 }

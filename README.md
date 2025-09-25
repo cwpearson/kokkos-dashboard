@@ -16,7 +16,7 @@ go run *.go
 
 ## Roadmap
 
-- [ ] Combine PRs and Issues, sort by most recent
+- [x] Combine PRs and Issues, sort by most recent
 - [ ] Bit of JS to delete cards
 - [ ] more github.com links
 - [ ] Hide comments section if there are no comments
