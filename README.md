@@ -22,3 +22,4 @@ go run *.go --fetch --render --serve
 - [ ] more github.com links
 - [x] Hide comments section if there are no comments
 - [x] `owner-repo.html` -> `owner/repo/index.html`
+- [ ] Don't render after fetch errors
