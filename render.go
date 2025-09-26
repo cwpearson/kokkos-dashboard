@@ -123,6 +123,15 @@ func render(config Config) error {
 					json.Unmarshal(fData, &issueData.Events)
 				}
 
+				// filter out old events
+				filteredEvents := []github.IssueEvent{}
+				for _, event := range issueData.Events {
+					if !event.CreatedAt.Before(config.Since) {
+						filteredEvents = append(filteredEvents, event)
+					}
+				}
+				issueData.Events = filteredEvents
+
 				// render bodies to markdown
 				for _, comment := range issueData.Comments {
 					comment.Body = string(mdToHTML([]byte(comment.Body)))
