@@ -27,5 +27,5 @@ go run *.go --fetch --render --serve
 - [x] List commits
 - [x] Favicon
   - [ ] make background transparent
-- [ ] tag draft PRs
+- [x] tag draft PRs
 - [ ] Interleave commits, comments, and events
