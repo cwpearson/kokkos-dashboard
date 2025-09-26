@@ -28,16 +28,18 @@
                 {{ end }}
 
                 {{ if .Events }}
-                <details>
-                    <summary>Events</summary>
-                    <div class="event-list">
-                        {{ range .Events }}
-                        <div class="event">
-                            <span class="timestamp">{{ .CreatedAt.Format "2006-01-02T15:04:05.000Z" }}</span> - {{ .Event }}
+                <div class="events-container">
+                    <details>
+                        <summary>Events</summary>
+                        <div class="event-list">
+                            {{ range .Events }}
+                            <div class="event">
+                                <span class="timestamp">{{ .CreatedAt.Format "2006-01-02T15:04:05.000Z" }}</span> - {{ .Event }}
+                            </div>
+                            {{ end }}
                         </div>
-                        {{ end }}
-                    </div>
-                </details>
+                    </details>
+                </div>
                 {{ end }}
             </details>
             {{ end }}
