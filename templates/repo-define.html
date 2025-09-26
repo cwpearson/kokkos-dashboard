@@ -4,14 +4,22 @@
         <div class="issue-list">
             {{ range .Issues }}
             <details class="issue" open>
-                <summary><span class="issue-title"><a href="{{ .HTMLURL }}">
+
+                <summary>
+                    <span class="issue-title"><a href="{{ .HTMLURL }}">
                     {{ if .PullRequest }}
                     PR
                     {{ else }}
                     Issue 
                     {{ end }}
                     {{ .Number }}
-                </a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span> - {{ .State }}</span></summary>
+                </a> - {{ .Title }}
+            
+                    <div class="issue-tags">
+                        <span class="tag updated-time">Updated: <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></span>
+                        <span class="tag repo-status">{{ .State }}</span>
+                    </div>
+            </summary>
 
                 {{ if .Comments}}
                 <h5>Comments</h5>

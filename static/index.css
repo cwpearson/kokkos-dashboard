@@ -241,3 +241,42 @@ a:hover {
   font-size: 1.2em;
   font-weight: bold;
 }
+
+
+
+.issue {
+    position: relative; /*needed to get the tags in the top-right of the parent*/
+
+    summary {
+        padding-right: 250px;
+    }
+}
+
+.issue-tags {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 8px;
+    z-index: 1;
+}
+
+.issue-tags .tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: #f0f0f0;
+    color: #666;
+    white-space: nowrap;
+}
+
+.issue-tags .updated-time {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.issue-tags .repo-status {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+}
