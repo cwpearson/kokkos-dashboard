@@ -19,8 +19,9 @@ go run *.go --fetch --render --serve
 
 - [x] Combine PRs and Issues, sort by most recent
 - [x] Bit of JS to delete cards
-- [ ] more github.com links
+- [x] more github.com links
 - [x] Hide comments section if there are no comments
 - [x] `owner-repo.html` -> `owner/repo/index.html`
 - [x] Don't render after fetch errors
-- [ ] List commits
+- [x] List commits
+- [x] Favicon
