@@ -1,11 +1,10 @@
 {{define "repo"}}
 <div class="repo">
         <h2>{{.Owner}}/{{.Repo}}</h2>
-
         <div class="issue-list">
             {{ range .Issues }}
             <div class="issue">
-                <button class="hide-btn" onclick="hideIssue(this)">Hide (refresh page to show again)</button>
+                <button class="hide-btn" onclick="hideIssue(this)">Hide</button>
                 <h4><a href="{{ .HTMLURL }}">
                     {{ if .PullRequest }}
                     PR
@@ -41,7 +40,6 @@
                     </div>
                 </detail>
                 {{ end }}
-
             </div>
             {{ end }}
         </div>
