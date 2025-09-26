@@ -174,10 +174,10 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 	err = tmpl.ExecuteTemplate(outputFile, "index.html", map[string]any{
 		"Repos":       repoData,
 		"CurrentYear": time.Now().Year(),
-		"BuildDate":   time.Now().Format(time.RFC3339),
+		"BuildDate":   time.Now().Format("2006-01-02T15:04:05.000Z"),
 		"NavRepos":    navRepos,
 		"SiteRoot":    config.SiteRoot,
-		"Since":       config.Since.Format(time.RFC3339),
+		"Since":       config.Since.Format("2006-01-02T15:04:05.000Z"),
 	})
 	if err != nil {
 		log.Fatal("Error executing template:", err)
@@ -196,10 +196,10 @@ func renderRepoData(repoData map[string]*RepoData, config Config) error {
 		err = tmpl.ExecuteTemplate(outputFile, "repo.html", map[string]any{
 			"Repo":        repo,
 			"CurrentYear": time.Now().Year(),
-			"BuildDate":   time.Now().Format(time.RFC3339),
+			"BuildDate":   time.Now().Format("2006-01-02T15:04:05.000Z"),
 			"NavRepos":    navRepos,
 			"SiteRoot":    config.SiteRoot,
-			"Since":       config.Since.Format(time.RFC3339),
+			"Since":       config.Since.Format("2006-01-02T15:04:05.000Z"),
 		})
 		if err != nil {
 			log.Fatal("Error executing template:", err)

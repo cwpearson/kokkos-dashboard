@@ -13,14 +13,14 @@
                     Issue 
                     {{ end }}
                     {{ .Number }}
-                </a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt }}</span> - {{ .State }}</h4>
+                </a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span> - {{ .State }}</h4>
 
                 {{ if .Comments}}
                 <h5>Comments</h5>
                 <div class="comment-list">
                     {{ range .Comments }}
                     <div class="comment">
-                        <a href={{.HTMLURL | safe}}>{{ .User.Login }} <span class="timestamp">{{ .UpdatedAt }}</span></a>
+                        <a href={{.HTMLURL | safe}}>{{ .User.Login }} <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></a>
                         <div class="body">
                             {{.Body | safe}}
                         </div>
@@ -34,7 +34,7 @@
                     <div class="event-list">
                         {{ range .Events }}
                         <div class="event">
-                            <span class="timestamp">{{ .CreatedAt }}</span> - {{ .Event }}
+                            <span class="timestamp">{{ .CreatedAt.Format "2006-01-02T15:04:05.000Z" }}</span> - {{ .Event }}
                         </div>
                         {{ end }}
                     </div>
