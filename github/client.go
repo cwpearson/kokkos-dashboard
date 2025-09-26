@@ -132,43 +132,6 @@ func (c *Client) GetRecentIssues(owner, repo string, since time.Time) ([]Issue, 
 	return issues, nil
 }
 
-func (c *Client) GetRecentPullRequests(owner, repo string, since time.Time) ([]PullRequest, error) {
-	url := fmt.Sprintf("%s/repos/%s/%s/pulls?state=all&sort=updated&direction=desc&since=%s&per_page=100",
-		c.baseURL, owner, repo, since.Format(time.RFC3339))
-
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Authorization", "Bearer "+c.token)
-	req.Header.Set("Accept", "application/vnd.github.v3+json")
-	req.Header.Set("User-Agent", "cwpearson/kokkos-dashboard")
-
-	resp, err := c.rlClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var prs []PullRequest
-	if err := json.NewDecoder(resp.Body).Decode(&prs); err != nil {
-		return nil, err
-	}
-
-	// Filter PRs updated since the given time
-	var recentPRs []PullRequest
-	for _, pr := range prs {
-		if pr.UpdatedAt.After(since) {
-			recentPRs = append(recentPRs, pr)
-		} else {
-			break // Since they're sorted by updated time
-		}
-	}
-
-	return recentPRs, nil
-}
-
 // GetIssueComments retrieves all comments for a specific issue since a given timestamp
 func (c *Client) GetIssueComments(owner, repo string, issueNumber int, since time.Time) ([]IssueComment, error) {
 	url := fmt.Sprintf("%s/repos/%s/%s/issues/%d/comments?sort=updated&since=%s&per_page=100",
