@@ -49,6 +49,12 @@ nav a:hover::after {
     font-size: 0.875rem;
 }
 
+.issue-title {
+  /* display: inline; */
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
     header {

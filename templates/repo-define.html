@@ -3,16 +3,15 @@
         <h2>{{.Owner}}/{{.Repo}}</h2>
         <div class="issue-list">
             {{ range .Issues }}
-            <div class="issue">
-                <button class="hide-btn" onclick="hideIssue(this)">Hide</button>
-                <h4><a href="{{ .HTMLURL }}">
+            <details class="issue" open>
+                <summary><span class="issue-title"><a href="{{ .HTMLURL }}">
                     {{ if .PullRequest }}
                     PR
                     {{ else }}
                     Issue 
                     {{ end }}
                     {{ .Number }}
-                </a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span> - {{ .State }}</h4>
+                </a> - {{ .Title }} - <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span> - {{ .State }}</span></summary>
 
                 {{ if .Comments}}
                 <h5>Comments</h5>
@@ -38,9 +37,9 @@
                         </div>
                         {{ end }}
                     </div>
-                </detail>
+                </details>
                 {{ end }}
-            </div>
+            </details>
             {{ end }}
         </div>
     </div>
