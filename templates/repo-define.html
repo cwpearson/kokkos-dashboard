@@ -35,6 +35,24 @@
                 </div>
                 {{ end }}
 
+                {{ if .Commits }}
+                <div class="commits-container">
+                    <details>
+                        <summary>Commits</summary>
+                        <div class="commit-list">
+                            {{ range .Commits }}
+                            <div class="commit">
+                                {{ if .Author }}
+                                {{ .Author.Login }} - 
+                                {{ end }}
+                                <span class="timestamp">{{ .Commit.Committer.Date.Format "2006-01-02T15:04:05.000Z" }}</span> - <a href="https://github.com/{{$.Owner}}/{{$.Repo}}/commit/{{.SHA }}">{{ .SHA | printf "%.8s" }}</a> - {{ .Commit.Message }}
+                            </div>
+                            {{ end }}
+                        </div>
+                    </details>
+                </div>
+                {{ end }}
+
                 {{ if .Events }}
                 <div class="events-container">
                     <details>

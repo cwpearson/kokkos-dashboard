@@ -28,6 +28,7 @@ type Issue struct {
 
 	Comments []*github.IssueComment
 	Events   []github.IssueEvent
+	Commits  []github.PullRequestCommit
 }
 
 // Helper functions
@@ -109,11 +110,13 @@ func render(config Config) error {
 
 				commentsPath := filepath.Join(issueDir, "comments.json")
 				eventsPath := filepath.Join(issueDir, "events.json")
+				commitsPath := filepath.Join(issueDir, "commits.json")
 
 				issueData := Issue{
 					Issue:    issue,
 					Comments: []*github.IssueComment{},
 					Events:   []github.IssueEvent{},
+					Commits:  []github.PullRequestCommit{},
 				}
 
 				if fData, err := os.ReadFile(commentsPath); err == nil {
@@ -121,6 +124,9 @@ func render(config Config) error {
 				}
 				if fData, err := os.ReadFile(eventsPath); err == nil {
 					json.Unmarshal(fData, &issueData.Events)
+				}
+				if fData, err := os.ReadFile(commitsPath); err == nil {
+					json.Unmarshal(fData, &issueData.Commits)
 				}
 
 				// filter out old events
@@ -131,6 +137,15 @@ func render(config Config) error {
 					}
 				}
 				issueData.Events = filteredEvents
+
+				// filter out old commits
+				filteredCommits := []github.PullRequestCommit{}
+				for _, commit := range issueData.Commits {
+					if !commit.Commit.Committer.Date.Before(config.Since) {
+						filteredCommits = append(filteredCommits, commit)
+					}
+				}
+				issueData.Commits = filteredCommits
 
 				// render bodies to markdown
 				for _, comment := range issueData.Comments {

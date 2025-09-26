@@ -91,6 +91,47 @@ type IssueEvent struct {
 	// Issue *Issue `json:"issue,omitempty"`
 }
 
+// PullRequestCommit represents a commit in a pull request
+type PullRequestCommit struct {
+	SHA    string `json:"sha"`
+	NodeID string `json:"node_id"`
+	Commit struct {
+		Author struct {
+			Name  string    `json:"name"`
+			Email string    `json:"email"`
+			Date  time.Time `json:"date"`
+		} `json:"author"`
+		Committer struct {
+			Name  string    `json:"name"`
+			Email string    `json:"email"`
+			Date  time.Time `json:"date"`
+		} `json:"committer"`
+		Message string `json:"message"`
+		Tree    struct {
+			SHA string `json:"sha"`
+			URL string `json:"url"`
+		} `json:"tree"`
+		URL          string `json:"url"`
+		CommentCount int    `json:"comment_count"`
+		Verification struct {
+			Verified  bool   `json:"verified"`
+			Reason    string `json:"reason"`
+			Signature string `json:"signature"`
+			Payload   string `json:"payload"`
+		} `json:"verification"`
+	} `json:"commit"`
+	URL         string `json:"url"`
+	HTMLURL     string `json:"html_url"`
+	CommentsURL string `json:"comments_url"`
+	Author      *User  `json:"author"`
+	Committer   *User  `json:"committer"`
+	Parents     []struct {
+		SHA     string `json:"sha"`
+		URL     string `json:"url"`
+		HTMLURL string `json:"html_url"`
+	} `json:"parents"`
+}
+
 func NewClient(token string) *Client {
 
 	return &Client{
@@ -208,4 +249,50 @@ func (c *Client) GetIssueEvents(owner, repo string, issueNumber int) ([]IssueEve
 	}
 
 	return allEvents, nil
+}
+
+// GetPullRequestCommits retrieves all commits for a specific pull request
+func (c *Client) GetPullRequestCommits(owner, repo string, pullNumber int) ([]PullRequestCommit, error) {
+	var allCommits []PullRequestCommit
+	page := 1
+	perPage := 100
+
+	for {
+		url := fmt.Sprintf("%s/repos/%s/%s/pulls/%d/commits?page=%d&per_page=%d",
+			c.baseURL, owner, repo, pullNumber, page, perPage)
+
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Authorization", "Bearer "+c.token)
+		req.Header.Set("Accept", "application/vnd.github.v3+json")
+		req.Header.Set("User-Agent", "cwpearson/kokkos-dashboard")
+
+		resp, err := c.rlClient.Do(req)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("GitHub API error: %s", resp.Status)
+		}
+
+		var commits []PullRequestCommit
+		if err := json.NewDecoder(resp.Body).Decode(&commits); err != nil {
+			return nil, err
+		}
+
+		allCommits = append(allCommits, commits...)
+
+		// Check if there are more pages
+		if len(commits) < perPage {
+			break
+		}
+		page++
+	}
+
+	return allCommits, nil
 }

@@ -77,6 +77,17 @@ func fetch(config Config) error {
 			if err := marshalAndWrite(events, filepath.Join(issueOutputDir, "events.json"), 0755); err != nil {
 				return err
 			}
+
+			if issue.PullRequest != nil {
+				commits, err := client.GetPullRequestCommits(repo.Owner, repo.Name, issue.Number)
+				if err != nil {
+					return err
+				}
+				if err := marshalAndWrite(commits, filepath.Join(issueOutputDir, "commits.json"), 0755); err != nil {
+					return err
+				}
+			}
+
 		}
 	}
 	return nil
