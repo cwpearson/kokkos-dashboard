@@ -116,6 +116,7 @@ func (c *Client) GetRecentIssues(owner, repo string, since time.Time) ([]Issue, 
 
 	req.Header.Set("Authorization", "Bearer "+c.token)
 	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	req.Header.Set("User-Agent", "cwpearson/kokkos-dashboard")
 
 	resp, err := c.rlClient.Do(req)
 	if err != nil {
@@ -142,6 +143,7 @@ func (c *Client) GetRecentPullRequests(owner, repo string, since time.Time) ([]P
 
 	req.Header.Set("Authorization", "Bearer "+c.token)
 	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	req.Header.Set("User-Agent", "cwpearson/kokkos-dashboard")
 
 	resp, err := c.rlClient.Do(req)
 	if err != nil {
@@ -179,6 +181,7 @@ func (c *Client) GetIssueComments(owner, repo string, issueNumber int, since tim
 
 	req.Header.Set("Authorization", "Bearer "+c.token)
 	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	req.Header.Set("User-Agent", "cwpearson/kokkos-dashboard")
 
 	resp, err := c.rlClient.Do(req)
 	if err != nil {
@@ -215,6 +218,7 @@ func (c *Client) GetIssueEvents(owner, repo string, issueNumber int) ([]IssueEve
 
 		req.Header.Set("Authorization", "Bearer "+c.token)
 		req.Header.Set("Accept", "application/vnd.github.v3+json")
+		req.Header.Set("User-Agent", "cwpearson/kokkos-dashboard")
 
 		resp, err := c.rlClient.Do(req)
 		if err != nil {
