@@ -32,6 +32,7 @@ type PullRequest struct {
 	Number    int        `json:"number"`
 	Title     string     `json:"title"`
 	State     string     `json:"state"`
+	Draft     bool       `json:"draft"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	MergedAt  *time.Time `json:"merged_at"`
@@ -295,4 +296,36 @@ func (c *Client) GetPullRequestCommits(owner, repo string, pullNumber int) ([]Pu
 	}
 
 	return allCommits, nil
+}
+
+// GetPullRequest retrieves a specific pull request by its number
+func (c *Client) GetPullRequest(owner, repo string, pullNumber int) (*PullRequest, error) {
+	url := fmt.Sprintf("%s/repos/%s/%s/pulls/%d",
+		c.baseURL, owner, repo, pullNumber)
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+c.token)
+	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	req.Header.Set("User-Agent", "cwpearson/kokkos-dashboard")
+
+	resp, err := c.rlClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("GitHub API error: %s", resp.Status)
+	}
+
+	var pr PullRequest
+	if err := json.NewDecoder(resp.Body).Decode(&pr); err != nil {
+		return nil, err
+	}
+
+	return &pr, nil
 }
