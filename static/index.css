@@ -196,30 +196,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .repo {
-        padding: 0 1rem;
-        margin: 1rem auto;
-    }
 
-    .issue {
-        padding: 1rem;
-    }
-
-    .comment-list,
-    .event-list {
-        margin-left: 0.5rem;
-    }
-
-    .repo h2 {
-        font-size: 1.5rem;
-    }
-
-    .repo h3 {
-        font-size: 1.125rem;
-    }
-}
 
 /* Loading states */
 .loading {
@@ -248,7 +225,7 @@ a:hover {
     position: relative; /*needed to get the tags in the top-right of the parent*/
 
     summary {
-        padding-right: 250px;
+        padding-right: 220px;
     }
 }
 
@@ -279,4 +256,35 @@ a:hover {
 .issue-tags .repo-status {
     background-color: #f3e5f5;
     color: #7b1fa2;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .repo {
+        padding: 0 1rem;
+        margin: 1rem auto;
+    }
+
+    .issue {
+        padding: 1rem;
+
+        /*move summary below tags*/
+        summary {
+            padding-right: 0;
+            padding-top: 1.5rem;
+        }
+    }
+
+    .comment-list,
+    .event-list {
+        margin-left: 0.5rem;
+    }
+
+    .repo h2 {
+        font-size: 1.5rem;
+    }
+
+    .repo h3 {
+        font-size: 1.125rem;
+    }
 }
