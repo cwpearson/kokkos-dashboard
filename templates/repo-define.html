@@ -6,7 +6,7 @@
             <details class="issue" open>
 
                 <summary>
-                    <span class="issue-title"><a href="{{ .HTMLURL }}">
+                    <span class="issue-title"><a href="{{ .HTMLURL }}" target="_blank">
                     {{ if .PullRequest }}
                     PR
                     {{ else }}
@@ -31,7 +31,7 @@
                 <div class="comment-list">
                     {{ range .Comments }}
                     <div class="comment">
-                        <a href={{.HTMLURL | safe}}>{{ .User.Login }} <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></a>
+                        <a href={{.HTMLURL | safe}} target="_blank">{{ .User.Login }} <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></a>
                         <div class="body">
                             {{.Body | safe}}
                         </div>
@@ -50,7 +50,7 @@
                                 {{ if .Author }}
                                 {{ .Author.Login }} - 
                                 {{ end }}
-                                <span class="timestamp">{{ .Commit.Committer.Date.Format "2006-01-02T15:04:05.000Z" }}</span> - <a href="https://github.com/{{$.Owner}}/{{$.Repo}}/commit/{{.SHA }}">{{ .SHA | printf "%.8s" }}</a> - {{ .Commit.Message }}
+                                <span class="timestamp">{{ .Commit.Committer.Date.Format "2006-01-02T15:04:05.000Z" }}</span> - <a href="https://github.com/{{$.Owner}}/{{$.Repo}}/commit/{{.SHA }}" target="_blank">{{ .SHA | printf "%.8s" }}</a> - {{ .Commit.Message }}
                             </div>
                             {{ end }}
                         </div>
