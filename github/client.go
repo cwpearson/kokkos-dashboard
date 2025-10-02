@@ -33,6 +33,7 @@ type PullRequest struct {
 	Title     string     `json:"title"`
 	State     string     `json:"state"`
 	Draft     bool       `json:"draft"`
+	Merged    bool       `json:"merged"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	MergedAt  *time.Time `json:"merged_at"`

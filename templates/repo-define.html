@@ -22,6 +22,9 @@
                         {{ if .PR.Draft }}
                         <span class="tag draft">draft</span>
                         {{ end }}
+                        {{ if .PR.Merged }}
+                        <span class="tag merged">merged</span>
+                        {{ end }}
                         {{ end }}
                     </div>
             </summary>
