@@ -17,14 +17,12 @@
             
                     <div class="issue-tags">
                         <span class="tag updated-time">Updated: <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></span>
-                        <span class="tag repo-status">{{ .State }}</span>
-                        {{ if .PR }}
-                        {{ if .PR.Draft }}
+                        {{ if and .PR .PR.Draft }}
                         <span class="tag draft">draft</span>
-                        {{ end }}
-                        {{ if .PR.Merged }}
+                        {{ else if and .PR .PR.Merged}}
                         <span class="tag merged">merged</span>
-                        {{ end }}
+                        {{ else }}
+                        <span class="tag repo-status">{{ .State }}</span>
                         {{ end }}
                     </div>
             </summary>
