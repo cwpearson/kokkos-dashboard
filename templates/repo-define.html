@@ -16,7 +16,7 @@
                 </a> - {{ .Title }}
             
                     <div class="issue-tags">
-                        <span class="tag updated-time">Updated: <span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></span>
+                        <span class="tag updated-time"><span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></span>
                         {{ range $state, $count := .ReviewStates }}
                         <span class="tag state">{{ $state }}: {{ $count }}</span>
                         {{ end }}
