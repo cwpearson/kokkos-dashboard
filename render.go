@@ -186,10 +186,8 @@ func render(config Config) error {
 					}
 
 					// count each kind of review state
-					log.Println(issueData.Number)
 					counts := map[string]int{}
-					for who, value := range states {
-						log.Println(who, value)
+					for _, value := range states {
 						counts[value.State]++
 					}
 
