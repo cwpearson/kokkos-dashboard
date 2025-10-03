@@ -134,6 +134,28 @@ type PullRequestCommit struct {
 	} `json:"parents"`
 }
 
+// PullRequestReview represents a review on a pull request
+type PullRequestReview struct {
+	ID                int64      `json:"id"`
+	NodeID            string     `json:"node_id"`
+	User              *User      `json:"user"`
+	Body              string     `json:"body"`
+	State             string     `json:"state"` // APPROVED, CHANGES_REQUESTED, COMMENTED, DISMISSED, PENDING
+	HTMLURL           string     `json:"html_url"`
+	PullRequestURL    string     `json:"pull_request_url"`
+	SubmittedAt       *time.Time `json:"submitted_at"`
+	CommitID          string     `json:"commit_id"`
+	AuthorAssociation string     `json:"author_association"`
+	Links             struct {
+		HTML struct {
+			Href string `json:"href"`
+		} `json:"html"`
+		PullRequest struct {
+			Href string `json:"href"`
+		} `json:"pull_request"`
+	} `json:"_links"`
+}
+
 func NewClient(token string) *Client {
 
 	return &Client{
@@ -329,4 +351,50 @@ func (c *Client) GetPullRequest(owner, repo string, pullNumber int) (*PullReques
 	}
 
 	return &pr, nil
+}
+
+// GetPullRequestReviews retrieves all reviews for a specific pull request
+func (c *Client) GetPullRequestReviews(owner, repo string, pullNumber int) ([]PullRequestReview, error) {
+	var allReviews []PullRequestReview
+	page := 1
+	perPage := 100
+
+	for {
+		url := fmt.Sprintf("%s/repos/%s/%s/pulls/%d/reviews?page=%d&per_page=%d",
+			c.baseURL, owner, repo, pullNumber, page, perPage)
+
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Authorization", "Bearer "+c.token)
+		req.Header.Set("Accept", "application/vnd.github.v3+json")
+		req.Header.Set("User-Agent", "cwpearson/kokkos-dashboard")
+
+		resp, err := c.rlClient.Do(req)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("GitHub API error: %s", resp.Status)
+		}
+
+		var reviews []PullRequestReview
+		if err := json.NewDecoder(resp.Body).Decode(&reviews); err != nil {
+			return nil, err
+		}
+
+		allReviews = append(allReviews, reviews...)
+
+		// Check if there are more pages
+		if len(reviews) < perPage {
+			break
+		}
+		page++
+	}
+
+	return allReviews, nil
 }

@@ -95,6 +95,13 @@ func fetch(config Config) error {
 					return err
 				}
 
+				reviews, err := client.GetPullRequestReviews(repo.Owner, repo.Name, issue.Number)
+				if err != nil {
+					return err
+				}
+				if err := marshalAndWrite(reviews, filepath.Join(issueOutputDir, "reviews.json"), 0755); err != nil {
+					return err
+				}
 			}
 		}
 	}
