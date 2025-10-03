@@ -29,3 +29,4 @@ go run *.go --fetch --render --serve
   - [ ] make background transparent
 - [x] tag draft PRs
 - [ ] Interleave commits, comments, and events
+- [ ] Add tags for reviews
