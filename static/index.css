@@ -104,6 +104,10 @@ body {
     margin-top: 0.5rem;
     color: #495057;
     font-size: 0.95rem;
+
+    word-break: break-all;
+    overflow-wrap: break-word;
+
 }
 
 /* Comment body content styling */
