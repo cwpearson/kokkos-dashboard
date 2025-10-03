@@ -88,8 +88,10 @@ body {
     font-weight: 500;
     margin-top: 1.25rem;
     margin-bottom: 0.75rem;
-    padding-top: 1rem;
+    
     border-top: 1px solid #dee2e6;
+
+    padding-top: 1rem;
 }
 
 .comment-list {
@@ -134,7 +136,7 @@ body {
 }
 
 /* Events details */
-.events-container{
+.events-container {
     details {
         margin-top: 1rem;
         border-top: 1px solid #dee2e6;
@@ -225,7 +227,8 @@ a:hover {
     position: relative; /*needed to get the tags in the top-right of the parent*/
 
     summary {
-        padding-right: 220px;
+        /*move summary below tags*/
+        padding-top: 1.5rem;
     }
 }
 
@@ -267,12 +270,6 @@ a:hover {
 
     .issue {
         padding: 1rem;
-
-        /*move summary below tags*/
-        summary {
-            padding-right: 0;
-            padding-top: 1.5rem;
-        }
     }
 
     .comment-list,
@@ -287,4 +284,10 @@ a:hover {
     .repo h3 {
         font-size: 1.125rem;
     }
+}
+
+.comment img {
+    object-fit: contain;
+    max-width: 100%;
+    height: auto;
 }

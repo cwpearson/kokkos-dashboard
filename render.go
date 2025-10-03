@@ -31,6 +31,8 @@ type Issue struct {
 	Commits  []github.PullRequestCommit
 	PR       *github.PullRequest
 	Reviews  []github.PullRequestReview
+
+	ReviewStates map[string]int // how many reviews in each state
 }
 
 // Helper functions
@@ -161,6 +163,52 @@ func render(config Config) error {
 				// render bodies to markdown
 				for _, comment := range issueData.Comments {
 					comment.Body = string(mdToHTML([]byte(comment.Body)))
+				}
+
+				// summarize reviews
+				{
+					// find the most recent review for each user
+					type Value struct {
+						State string
+						When  time.Time
+					}
+					states := map[string]*Value{}
+					for _, review := range issueData.Reviews {
+						login := review.User.Login
+						newer := &Value{review.State, *review.SubmittedAt}
+						if value, ok := states[login]; ok {
+							if value.When.Before(*review.SubmittedAt) {
+								states[login] = newer
+							}
+						} else {
+							states[login] = newer
+						}
+					}
+
+					// count each kind of review state
+					log.Println(issueData.Number)
+					counts := map[string]int{}
+					for who, value := range states {
+						log.Println(who, value)
+						counts[value.State]++
+					}
+
+					// rename review states
+					for state, count := range counts {
+						switch state {
+						case "APPROVED":
+							delete(counts, state)
+							counts["✅"] = count
+						case "CHANGES_REQUESTED":
+							delete(counts, state)
+							counts["🔄"] = count
+						case "COMMENTED":
+							delete(counts, state)
+							counts["🗨"] = count
+						}
+					}
+
+					issueData.ReviewStates = counts
 				}
 
 				data.Issues = append(data.Issues, issueData)
