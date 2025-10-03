@@ -191,14 +191,6 @@ a:hover {
     text-decoration: underline;
 }
 
-
-
-/* Loading states */
-.loading {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
 /* Empty states */
 .issue-list:empty::after {
     content: "No items to display";
