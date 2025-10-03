@@ -30,6 +30,7 @@ type Issue struct {
 	Events   []github.IssueEvent
 	Commits  []github.PullRequestCommit
 	PR       *github.PullRequest
+	Reviews  []github.PullRequestReview
 }
 
 // Helper functions
@@ -113,12 +114,14 @@ func render(config Config) error {
 				eventsPath := filepath.Join(issueDir, "events.json")
 				commitsPath := filepath.Join(issueDir, "commits.json")
 				prPath := filepath.Join(issueDir, "pr.json")
+				reviewsPath := filepath.Join(issueDir, "reviews.json")
 
 				issueData := Issue{
 					Issue:    issue,
 					Comments: []*github.IssueComment{},
 					Events:   []github.IssueEvent{},
 					Commits:  []github.PullRequestCommit{},
+					Reviews:  []github.PullRequestReview{},
 				}
 
 				if fData, err := os.ReadFile(commentsPath); err == nil {
@@ -132,6 +135,9 @@ func render(config Config) error {
 				}
 				if fData, err := os.ReadFile(prPath); err == nil {
 					json.Unmarshal(fData, &issueData.PR)
+				}
+				if fData, err := os.ReadFile(reviewsPath); err == nil {
+					json.Unmarshal(fData, &issueData.Reviews)
 				}
 
 				// filter out old events
