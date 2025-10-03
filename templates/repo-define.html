@@ -3,8 +3,22 @@
         <h2>{{.Owner}}/{{.Repo}}</h2>
         <div class="issue-list">
             {{ range .Issues }}
-            <details class="issue" open>
+            <div class="issue">
+                <div class="issue-tags">
+                    <span class="tag updated-time"><span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></span>
+                    {{ range $state, $count := .ReviewStates }}
+                    <span class="tag state">{{ $state }}: {{ $count }}</span>
+                    {{ end }}
+                    {{ if and .PR .PR.Draft }}
+                    <span class="tag draft">draft</span>
+                    {{ else if and .PR .PR.Merged}}
+                    <span class="tag merged">merged</span>
+                    {{ else }}
+                    <span class="tag repo-status">{{ .State }}</span>
+                    {{ end }}
+                </div>
 
+            <details open>
                 <summary>
                     <span class="issue-title"><a href="{{ .HTMLURL }}" target="_blank">
                     {{ if .PullRequest }}
@@ -15,19 +29,7 @@
                     {{ .Number }}
                 </a> - {{ .Title }}
             
-                    <div class="issue-tags">
-                        <span class="tag updated-time"><span class="timestamp">{{ .UpdatedAt.Format "2006-01-02T15:04:05.000Z" }}</span></span>
-                        {{ range $state, $count := .ReviewStates }}
-                        <span class="tag state">{{ $state }}: {{ $count }}</span>
-                        {{ end }}
-                        {{ if and .PR .PR.Draft }}
-                        <span class="tag draft">draft</span>
-                        {{ else if and .PR .PR.Merged}}
-                        <span class="tag merged">merged</span>
-                        {{ else }}
-                        <span class="tag repo-status">{{ .State }}</span>
-                        {{ end }}
-                    </div>
+
             </summary>
 
                 {{ if .Comments}}
@@ -77,6 +79,7 @@
                 </div>
                 {{ end }}
             </details>
+            </div>
             {{ end }}
         </div>
     </div>

@@ -29,4 +29,5 @@ go run *.go --fetch --render --serve
   - [ ] make background transparent
 - [x] tag draft PRs
 - [ ] Interleave commits, comments, and events
-- [ ] Add tags for reviews
+- [x] Add tags for reviews
+- [x] Fix tag left overflow on narrow screens

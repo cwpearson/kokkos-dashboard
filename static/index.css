@@ -221,24 +221,10 @@ a:hover {
   font-weight: bold;
 }
 
-
-
-.issue {
-    position: relative; /*needed to get the tags in the top-right of the parent*/
-
-    summary {
-        /*move summary below tags*/
-        padding-top: 1.5rem;
-    }
-}
-
 .issue-tags {
-    position: absolute;
-    top: 8px;
-    right: 8px;
     display: flex;
+    flex-flow: row-reverse wrap;
     gap: 8px;
-    z-index: 1;
 }
 
 .issue-tags .tag {
