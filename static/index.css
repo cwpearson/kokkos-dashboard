@@ -262,3 +262,9 @@ a:hover {
     max-width: 100%;
     height: auto;
 }
+
+/* First level */
+.comment blockquote  {
+    font-style: italic;
+    color: #666;
+}
