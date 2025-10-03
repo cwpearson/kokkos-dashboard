@@ -43,7 +43,7 @@ body {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 0.375rem;
-    padding: 1.5rem;
+    padding: 1.0rem;
     transition: box-shadow 0.2s ease;
 }
 
@@ -71,15 +71,7 @@ body {
     text-decoration: underline;
 }
 
-/* State badges */
-.issue .state {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-left: 0.5rem;
-}
+
 
 /* Comments section */
 .issue h5 {
@@ -225,7 +217,7 @@ a:hover {
 .issue-tags {
     display: flex;
     flex-flow: row-reverse wrap;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 .issue-tags .tag {
