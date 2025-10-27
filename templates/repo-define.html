@@ -9,10 +9,12 @@
                     {{ range $state, $count := .ReviewStates }}
                     <span class="tag state">{{ $state }}: {{ $count }}</span>
                     {{ end }}
-                    {{ if and .PR .PR.Draft }}
-                    <span class="tag draft">draft</span>
-                    {{ else if and .PR .PR.Merged}}
+                    {{ if and .PR .PR.Merged}}
                     <span class="tag merged">merged</span>
+                    {{ else if eq .State "closed" }}
+                    <span class="tag closed">draft</span>
+                    {{ else if and .PR .PR.Draft }}
+                    <span class="tag draft">draft</span>
                     {{ else }}
                     <span class="tag repo-status">{{ .State }}</span>
                     {{ end }}
