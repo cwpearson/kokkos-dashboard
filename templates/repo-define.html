@@ -12,7 +12,7 @@
                     {{ if and .PR .PR.Merged}}
                     <span class="tag merged">merged</span>
                     {{ else if eq .State "closed" }}
-                    <span class="tag closed">draft</span>
+                    <span class="tag closed">{{ .State }}</span>
                     {{ else if and .PR .PR.Draft }}
                     <span class="tag draft">draft</span>
                     {{ else }}

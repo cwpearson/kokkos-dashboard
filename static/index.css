@@ -236,7 +236,7 @@ a:hover {
     color: #7b1fa2;
 }
 
-.issue-tags .repo-status {
+.issue-tags .closed {
     background-color: #f5e5e5;
     color: #a21f1f;
 }
