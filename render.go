@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/gomarkdown/markdown"
@@ -175,6 +176,12 @@ func render(config Config) error {
 					states := map[string]*Value{}
 					for _, review := range issueData.Reviews {
 						login := review.User.Login
+
+						if strings.ToLower(review.State) == "pending" {
+							log.Println("skipped pending review", review.ID)
+							continue
+						}
+
 						newer := &Value{review.State, *review.SubmittedAt}
 						if value, ok := states[login]; ok {
 							if value.When.Before(*review.SubmittedAt) {
