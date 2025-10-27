@@ -202,7 +202,7 @@ func render(config Config) error {
 							counts["🔄"] = count
 						case "COMMENTED":
 							delete(counts, state)
-							counts["🗨"] = count
+							counts["💬"] = count
 						case "DISMISSED":
 							delete(counts, state)
 							counts["⊘"] = count
