@@ -99,6 +99,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 
 		// sleep before retry
 		time.Sleep(5 * time.Second)
+		log.Println("retry request...")
 	}
 
 	// Update last request time
