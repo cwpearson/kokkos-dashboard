@@ -88,7 +88,23 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	limiter.lastRequest = time.Now()
 
 	// Execute the request
-	return c.client.Do(req)
+	var resp *http.Response
+	var err error
+	for range 3 {
+		resp, err = c.client.Do(req)
+
+		if resp.StatusCode < 500 {
+			break
+		}
+
+		// sleep before retry
+		time.Sleep(5 * time.Second)
+	}
+
+	// Update last request time
+	limiter.lastRequest = time.Now()
+
+	return resp, err
 }
 
 // SetMinInterval updates the minimum interval between requests
