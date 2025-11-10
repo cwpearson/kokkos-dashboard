@@ -84,13 +84,14 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		time.Sleep(waitTime)
 	}
 
-	// Update last request time
-	limiter.lastRequest = time.Now()
-
 	// Execute the request
 	var resp *http.Response
 	var err error
 	for range 3 {
+
+		// Update last request time
+		limiter.lastRequest = time.Now()
+
 		resp, err = c.client.Do(req)
 
 		if resp.StatusCode < 500 {
@@ -101,9 +102,6 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		time.Sleep(5 * time.Second)
 		log.Println("retry request...")
 	}
-
-	// Update last request time
-	limiter.lastRequest = time.Now()
 
 	return resp, err
 }
